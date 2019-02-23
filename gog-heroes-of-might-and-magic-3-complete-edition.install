@@ -1,4 +1,0 @@
-post_install() {
-    echo "Make sure to add user to the \"games\" group with"
-    echo "    # gpasswd -a USER games"
-}

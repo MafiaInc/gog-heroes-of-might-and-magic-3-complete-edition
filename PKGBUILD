@@ -16,16 +16,14 @@ source=("setup_homm3_complete_${pkgver}.exe::gogdownloader://${_gamename}/en1ins
         #"http://h3hota.com/HD/HoMM3%20HD%20Latest.exe"
         "${pkgname}"
         "${pkgname}-campaign-editor"
-        "${pkgname}-map-editor"
-        "${pkgname}.install")
+        "${pkgname}-map-editor")
 sha256sums=('76af0bfa9ddb1889ff0fe516599f21e3f2a696dd5baaf74333b5b58cc425a0e1'
             'a7b6d9f13bc6924d515eaa39430b290b80fd4253b2d1c40e9d936c4d242a466f'
 #            'SKIP'
-            'bb1cec5ef9de917ae69bb04d661d843986b038a277871557387cd66c7292604d'
-            '2165809683969955bca129f1960efa5111aaa703ac891df29b809f4ce5b30eaa'
-            '5265ae79418a0c376d2f98cc52c5fc2ed34af802080e00c229754efe9f8e91d6'
-            '6c6d7f19bcca181ee5c1c51c9f15e8d12d95e1feabcd676d1a41fc377f050d37')
-depends=(wine)
+            '4cbc70b50d94497294f6208dc91e0c3a8da2d494b0d1e02d0929ffc3924e4569'
+            '1c780da9550edf46168b44dca34b68a8159e3083f8960b5443721bfad3d87a06'
+            '14927c0c59520861fd8a00d05f4b9fbcc70a71ff669add852ba0f5c670f8556a')
+depends=(wine unionfs-fuse util-linux)
 
 # Register lgogdownloader as a download agent
 DLAGENTS+=('gogdownloader::/usr/bin/lgogdownloader --download-file=%u -o %o')
@@ -63,16 +61,6 @@ package() {
   # Remove unneeded files
   rm -rf ${pkgdir}/opt/gog/${pkgname#gog-}/unins*
   rm -rf ${pkgdir}/opt/gog/${pkgname#gog-}/*.lnk
-  # Give group write access to Data (to enable h3mmaped.exe)
-  chown :games ${pkgdir}/opt/gog/${pkgname#gog-}/Data/*
-  chmod g+w ${pkgdir}/opt/gog/${pkgname#gog-}/Data/*
-  # Give group write access to HD3 launcher config
-  #for conf in _HD3_Data/HD3_Launcher.ini _HD3_Data/Settings/sod.ini
-  #do
-  #  touch ${pkgdir}/opt/gog/${_pkgname#gog-}/${conf}
-  #  chown :games ${pkgdir}/opt/gog/${_pkgname#gog-}/${conf}
-  #  chmod g+w ${pkgdir}/opt/gog/${_pkgname#gog-}/${conf}
-  #done
   
   # Install .desktop file and icons
   install -Dm644 "${srcdir}/tmp/local/applications/wine/Programs/GOG.com/Heroes of Might and Magic 3 Complete/Heroes of Might and Magic 3 Complete.desktop" ${pkgdir}/usr/share/applications/${pkgname}.desktop
