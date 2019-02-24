@@ -24,7 +24,6 @@ then
   unionfs -o cow,allow_other,relaxed_permissions,use_ino,suid,dev,nonempty ${DATA_DIR}=RW:${SOURCE}=RO "${UNIONFS_MNT}"
 fi
 cd "${UNIONFS_MNT}"
-wine Heroes3.exe "$@"
+wine HD_Launcher.exe "$@"
 cd ..
 fusermount -u "${UNIONFS_MNT}"
-#wine HD_Launcher.exe "$@"

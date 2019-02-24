@@ -1,6 +1,6 @@
 pkgname=gog-heroes-of-might-and-magic-3-complete-edition
 pkgver=4.0.25024
-pkgrel=1
+pkgrel=2
 _gamename=${pkgname#gog-}
 _gamename=${_gamename//-/_}
 _gamehdpatchname="HoMM3%20HD%20Latest.exe"
@@ -13,14 +13,14 @@ groups=("games")
 
 source=("setup_homm3_complete_${pkgver}.exe::gogdownloader://${_gamename}/en1installer0"
         "setup_homm3_complete_${pkgver}-1.bin::gogdownloader://${_gamename}/en1installer1"
-        #"http://h3hota.com/HD/HoMM3%20HD%20Latest.exe"
+        "http://ih875403.vds.myihor.ru/HoMM3_HD_Latest_setup.exe"
         "${pkgname}"
         "${pkgname}-campaign-editor"
         "${pkgname}-map-editor")
 sha256sums=('76af0bfa9ddb1889ff0fe516599f21e3f2a696dd5baaf74333b5b58cc425a0e1'
             'a7b6d9f13bc6924d515eaa39430b290b80fd4253b2d1c40e9d936c4d242a466f'
-#            'SKIP'
-            '4cbc70b50d94497294f6208dc91e0c3a8da2d494b0d1e02d0929ffc3924e4569'
+            'SKIP'
+            '3b4c50a772aaeabde4763d407387ef2213036a49a6cd7eead34bc5ddb1586a5d'
             '1c780da9550edf46168b44dca34b68a8159e3083f8960b5443721bfad3d87a06'
             '14927c0c59520861fd8a00d05f4b9fbcc70a71ff669add852ba0f5c670f8556a')
 depends=(wine unionfs-fuse util-linux)
@@ -38,19 +38,15 @@ build() {
   install -m755 -d "$srcdir"/tmp "$srcdir"/tmp/env "$srcdir"/tmp/local
   msg "Running GOG installer (Don't customize or launch game)"
   wine "${srcdir}/setup_homm3_complete_${pkgver}.exe"
+  msg "Running HD patch installer (Don't customize or launch game)"
+  wine "${srcdir}/HoMM3_HD_Latest_setup.exe" "/DIR=C:\GOG Games\HoMM 3 Complete"
   # Unfortunately, /verysilent doesn't work
   # messagebox from showing up and blocking. Manual intervention is required
 #  msg "Installing HD patch"
 #  wine "${srcdir}/${_gamehdpatchname}" /verysilent
-  msg "Extracting HKEY_LOCAL_MACHINE registry"
-  regedit -e ${srcdir}/local_machine.reg "HKEY_LOCAL_MACHINE\Software\New World Computing"
-  sed -i 's,C:\\\\GOG Games\\\\homm 3 complete,Z:\\\\opt\\\\gog\\\\homm 3 complete,g' local_machine.reg
 }
 
 package() {
-  # Install registry configuration
-  install -Dm644 ${srcdir}/local_machine.reg ${pkgdir}/usr/share/${pkgname}/local_machine.reg
-
   # Install license
   install -Dm644 "${srcdir}/tmp/env/drive_c/GOG Games/HoMM 3 Complete/EULA.txt" "${pkgdir}"/usr/share/licenses/$pkgname/LICENSE
 
